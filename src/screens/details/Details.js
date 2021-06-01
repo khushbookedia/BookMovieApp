@@ -6,17 +6,18 @@ import Typography from '@material-ui/core/Typography';
 import YouTube from 'react-youtube';
 import Rating from "@material-ui/lab/Rating";
 import StarBorderIcon from "@material-ui/icons/StarBorder";
-//import { withStyles } from '@material-ui/core/styles';
 import { GridList, GridListTile, GridListTileBar } from '@material-ui/core';
 import {useDispatch} from "react-redux";
 import { useLocation } from 'react-router-dom';
 
+//styling used for displaying the content of middle section of this page
 const useFilterStyles = makeStyles((theme) => ({
     typo: {
         marginBottom: "16px"
     },
 }));
 
+//styling used for displaying the content of rightmost section of this page
 const useArtistStyles = makeStyles((theme) => ({
     root: {
       display: "flex",
@@ -40,17 +41,6 @@ const useArtistStyles = makeStyles((theme) => ({
   }));
 
 
-    // const StyledRating = withStyles({
-    //     iconFilled: {
-    //     color: '#ff6d75',
-    // },
-    // iconHover: {
-    // //  color: '#ff3d47',
-    //     borderColor: '#ff3d47',
-    // },
-    // })(Rating);
-
-
 export default function Details(state){
 
     const location = useLocation();
@@ -58,9 +48,10 @@ export default function Details(state){
     let movieId = state.match.params.id;
     const [movieDetails, setmovieDetails] = useState([]);
 
-    const dispatch = useDispatch();
+    const dispatch = useDispatch();     //using redux hook
 
     useEffect(()=>{
+        //fetching the details of the movies from the database using movieId received from the redux store
         const getmovieDetails = async () => {
             const response = await fetch("http://localhost:8085/api/v1/movies/" + movieId,{
                 method: 'GET'
@@ -78,7 +69,7 @@ export default function Details(state){
     
     
 
-    
+    //code for displaying the left section of the page
     const DisplayLeftPart = () => {
 
         return(     
@@ -88,6 +79,7 @@ export default function Details(state){
         )
     }
 
+    //code for displaying the middle section of the page (all the movie details using material UI)
     const DisplayMiddlePart = ()=> {
         const classes = useFilterStyles();
         const releaseDate = new Date(movieDetails.release_date);
@@ -125,7 +117,7 @@ export default function Details(state){
     } 
 
     
-
+    //code for displaying the right section of the page
     const DisplayRightPart = ()=> {
 
         let artists= movieDetails.artists;
@@ -167,6 +159,7 @@ export default function Details(state){
         )
     }
 
+    //returns null, if there is no record found for that movieId in the API
     if (movieDetails.length < 1) return null;
 
     return(
