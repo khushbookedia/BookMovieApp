@@ -10,6 +10,7 @@ import Typography from '@material-ui/core/Typography';
 import { FormControl, InputLabel, Input, Checkbox, ListItemText, MenuItem, TextField } from '@material-ui/core';
 import {Link} from 'react-router-dom';
 
+//style used for displaying upcoming movies
 const useStyles = makeStyles((theme) => ({
     root: {
       display: "flex",
@@ -31,14 +32,15 @@ const useStyles = makeStyles((theme) => ({
     },
   }));
   
+  //style used for displaying released movies
   const useStylesReleased = makeStyles((theme) => ({
     root: {
       display: "flex",
       flexWrap: "wrap",
-      justifyContent: "space-around",
+      //justifyContent: "space-around",
       backgroundColor: theme.palette.background.paper,
-      width:"74%",
-      margin:"16px"
+      margin:"16px",
+      width:"76%",
     },
     title: {
       color: theme.palette.primary.light,
@@ -52,6 +54,7 @@ const useStyles = makeStyles((theme) => ({
     }
   }));
 
+  //style used for displaying filter card
   const useFilterStyles = makeStyles((theme) => ({
     formControl: {
         margin: theme.spacing(1),
@@ -61,7 +64,7 @@ const useStyles = makeStyles((theme) => ({
     root: {
       minWidth: 240,
       maxWidth: 240,
-      margin: theme.spacing(2),
+      margin: theme.spacing(1),
       textAlign: 'center',
     },
     title: {
@@ -78,20 +81,21 @@ const useStyles = makeStyles((theme) => ({
       },
 }));
 
+//style for designing the selct dropdowns of filter
 const ITEM_HEIGHT = 48;
-    const ITEM_PADDING_TOP = 8;
-    const MenuProps = {
-        PaperProps: {
-          style: {
-            maxHeight: ITEM_HEIGHT * 5 + ITEM_PADDING_TOP,
-            width: 240
-          }
+const ITEM_PADDING_TOP = 8;
+const MenuProps = {
+    PaperProps: {
+        style: {
+        maxHeight: ITEM_HEIGHT * 5 + ITEM_PADDING_TOP,
+        width: 240
         }
-    };
+    }
+};
 
 
 export default function Home(props){
-    const [tileData, setTileData] = useState([]);
+    const [tileData, setTileData] = useState([]);       
     const [releasedMovies, setReleasedMovies] = useState([]);
     const [getGenres, setGenres] = useState([]);
     const [genreNames, setGenreNames] = useState([]);
@@ -116,6 +120,7 @@ export default function Home(props){
         loadArtists();
     },[])
     
+    //function for loading all the upcoming movies from the API
     const loadMovies = async()=> {
 
         try{
@@ -134,6 +139,7 @@ export default function Home(props){
         }
     }
     
+    //function for loading all the released movies from the API
     const loadReleasedMovies = async()=> {
         try{
             const response = await fetch("http://localhost:8085/api/v1/movies?limit=50",{
@@ -156,6 +162,7 @@ export default function Home(props){
         }
     }
 
+    //function for loading genres in the select dropdown from the API
     const loadGenres = async()=> {
         try{
             const input = await fetch("http://localhost:8085/api/v1/genres",{
@@ -175,6 +182,7 @@ export default function Home(props){
         }
     }
 
+    //function for loading artists in the select dropdown from the API
     const loadArtists = async()=> {
         try{
             const input = await fetch("http://localhost:8085/api/v1/artists",{
@@ -194,7 +202,7 @@ export default function Home(props){
         }
     }
     
-    
+    //function for displaying upcoming movies in the Grid
     const DisplayMovies = () =>{
         const classes = useStyles();
         
@@ -218,6 +226,7 @@ export default function Home(props){
         )
     }
 
+    //function for displaying released movies in the Grid
     const DisplayTheatreMovies = ()=> {
         const classes = useStylesReleased();
         const isFilteredMoviesAvailable = filteredItems.length > 0;
@@ -232,7 +241,7 @@ export default function Home(props){
                         >
                         {loopOverArray.map((tile) => (
                         
-                            <GridListTile key={tile.poster_url} style={{width:200}}>
+                            <GridListTile key={tile.poster_url} style={{width:210}}>
                                 <Link to={{
                                     pathname:`/movie/${tile.id}`,
                                     state: {
@@ -257,34 +266,41 @@ export default function Home(props){
         )
     }
 
-    
+    //function to handle change in the select dropdown of genres in the filter card
     const handleGenreChange = event => {
         setGenreNames(event.target.value);
     }
+
+    //function to handle change in the select dropdown of artists in the filter card
     const handleArtistChange = (event) => {
         setArtistNames(event.target.value);
     }
 
+    //function to handle change in the movie name text field in the filter card
     const handleInputChange = (e)=>{
         filters.movieName = e.target.value;
     }
 
+    //function to handle change in the release start date in the filter card
     const handleStartDate = (e) =>{
     filters.releaseStartDate = e.target.value;
     }
 
+    //function to handle change in the release end date in the filter card
     const handleEndDate = (e) => {
     filters.releaseEndDate = e.target.value;
     }
 
+    //function for handling the click of Apply button in the filter card
     function filterHandler() {
         let filteredItems = releasedMovies.slice();
         let result = [];
 
+        //filtering with the movie name
         if(filters.movieName !== "")
             filteredItems = filteredItems.filter(item => item.title.toLocaleLowerCase() === filters.movieName.toLocaleLowerCase())
         
-        
+        //filtering with the genre names
         if(filters.genreName !== {}){
             let genreFilter = [];
             filteredItems.filter(item => {
@@ -318,6 +334,7 @@ export default function Home(props){
             }
         }
 
+        //filtering with the artist names
         if(filters.artistName !== {}){
             let artistFilter = [];
             filteredItems.filter(item => {
@@ -353,6 +370,7 @@ export default function Home(props){
 
         }
 
+        //filtering with the start date
         if(filters.releaseStartDate !== ''){
             const d1 = new Date(filters.releaseStartDate);
             filteredItems.filter(item => {
@@ -367,6 +385,7 @@ export default function Home(props){
             
         }
 
+        //filtering with the end date
         if(filters.releaseEndDate !== ''){
             const d1 = new Date(filters.releaseEndDate);
             filteredItems.filter(item => {
@@ -380,6 +399,7 @@ export default function Home(props){
                     filteredItems = result;
         }
 
+        //showing all the records again, if nothing is selected/written in the filter fields
         if(filters.movieName === "" && genreNames.length === 0 && artistNames.length === 0 && filters.releaseStartDate === '' && filters.releaseEndDate === ''){
             loadReleasedMovies();
             filteredItems = releasedMovies;
@@ -389,6 +409,7 @@ export default function Home(props){
     }
 
 
+    //function to display the filter form 
     const DisplayFilter = () => {
         const classes = useFilterStyles();
         return(
@@ -452,7 +473,7 @@ export default function Home(props){
                             id="release_date_start"
                             label="Release Date Start"
                             type="date"
-                            defaultValue="yyyy.MM.dd"
+                            defaultValue="yyyy-MM-dd"
                             className={classes.textField}
                             InputLabelProps={{
                             shrink: true,
@@ -465,7 +486,7 @@ export default function Home(props){
                             id="release_date_end"
                             label="Release Date End"
                             type="date"
-                            defaultValue="yyyy.MM.dd"
+                            defaultValue="yyyy-MM-dd"
                             className={classes.textField}
                             InputLabelProps={{
                             shrink: true,
@@ -484,7 +505,6 @@ export default function Home(props){
 
     return(
         <div>
-
              <div className="homeHeading">
                 Upcoming Movies
              </div>
@@ -495,11 +515,8 @@ export default function Home(props){
                 <div className="released-movies-container"><DisplayTheatreMovies/></div>
                 <div className="filter-container">
                     <DisplayFilter />
-
                 </div>
              </div>
-            
-             
 
         </div>
     )

@@ -54,7 +54,6 @@ const useArtistStyles = makeStyles((theme) => ({
 export default function Details(state){
 
     const location = useLocation();
-    //console.log(location, "location");
 
     let movieId = state.match.params.id;
     const [movieDetails, setmovieDetails] = useState([]);

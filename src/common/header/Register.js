@@ -18,15 +18,15 @@ export default function Register(){
 
     var xhr = new XMLHttpRequest();
 
+    //save the registration details in the database
     const saveFormData = async()=> {
             xhr.open('POST', 'http://localhost:8085/api/v1/signup');
             xhr.setRequestHeader('Content-Type', 'application/json');
             xhr.send(JSON.stringify(registerForm));
-            console.log(registerForm);
-        
-        
+            console.log(registerForm);         
     }
     
+    //handles the click of Register button in the form and shows appropriate success/fail message 
     const handleSubmit = async (event) => {
         event.preventDefault();
         try{
@@ -39,6 +39,7 @@ export default function Register(){
          }
     }
 
+    //handles the change in the form text fields and update the values in the state variable
     const inputChangedHandler = (e) => {
         const state = registerForm;
         state[e.target.name] = e.target.value;

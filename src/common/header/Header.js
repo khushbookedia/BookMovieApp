@@ -26,7 +26,7 @@ const Header = function(props){
     const [isReleasedMovieBtnClicked, setisReleasedMovieBtnClicked]  = useState(false);
     const [isLoggedIn, setLoggedIn] = useState(false)
     const [modalIsOpen, setisModalOpen] = useState(false);
-    const [tabValue,setTabValue] = React.useState(0);
+    const [tabValue,setTabValue] = useState(0);
     const location = useLocation();
     
     //Getting the movieId from the redux store state
@@ -168,18 +168,17 @@ const Header = function(props){
 
             <div className="headerButtons">
 
-            {/* show the bookShow button in the header, if the user is on details page */} 
-            {isReleasedMovieBtnClicked && <button className="bookShow-btn" variant="contained" onClick={bookShowHandler}>BOOK SHOW</button>}
+                {/* show the bookShow button in the header, if the user is on details page */} 
+                {isReleasedMovieBtnClicked && <button className="bookShow-btn" variant="contained" onClick={bookShowHandler}>BOOK SHOW</button>}
 
-            {/* show the logout button if the user is logged in */}
-            {isLoggedIn && <button className="header-btn" variant="contained" onClick={logoutHandler}>LOGOUT</button>}
-            
-            {/* show the login button if the user is logged out */}
-            {!isLoggedIn && <button className="header-btn" variant="contained" onClick={openModal}>LOGIN</button>}            
-
+                {/* show the logout button if the user is logged in */}
+                {isLoggedIn && <button className="header-btn" variant="contained" onClick={logoutHandler}>LOGOUT</button>}
                 
+                {/* show the login button if the user is logged out */}
+                {!isLoggedIn && <button className="header-btn" variant="contained" onClick={openModal}>LOGIN</button>}            
 
             </div>
+            
             <Modal
                     isOpen={modalIsOpen}
                     onRequestClose={closeModal}
